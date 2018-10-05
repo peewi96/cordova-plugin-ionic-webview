@@ -144,6 +144,14 @@
     return self;
 }
 
+// This is what you need to add to enable untrusted SSL connection
+- (void)webView:(WKWebView *)webView
+didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+    SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
+    completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:serverTrust]);
+}
+
 - (void)initWebServer
 {
     [GCDWebServer setLogLevel: kGCDWebServerLoggingLevel_Warning];
